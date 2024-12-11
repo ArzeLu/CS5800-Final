@@ -1,0 +1,27 @@
+@startuml
+start
+    :Start up execute
+     User manual execute;
+
+    :Start application;
+
+    repeat
+        if(What to focus on?) then (Main content)
+            if(What to do?) then (Interactions)
+                :\n\nInteractions\n\n
+                          .puml;
+            else (Utilities)
+                :\n\nUtilities\n\n
+                       .puml;
+            end if
+        else (Settings)
+            :\n\n\nSettings\n\n\n
+                      .puml;
+        end if
+        repeat while(Close application /
+                     Shut down system?) is (no)
+            ->yes;
+
+
+end
+@enduml

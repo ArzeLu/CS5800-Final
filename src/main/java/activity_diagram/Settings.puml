@@ -1,0 +1,11 @@
+@startuml
+start
+    :Go to taskbar;
+    :Open menu;
+    :Audio level
+    Font size
+    Manage account
+    Manage friends list
+    Credits;
+stop
+@enduml

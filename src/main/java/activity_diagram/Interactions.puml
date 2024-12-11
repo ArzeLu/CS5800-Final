@@ -1,0 +1,20 @@
+@startuml
+start
+        if(who?) then (Character)
+            :Mini games
+            Talk to it
+            Diary
+            Todo List
+            Move files around
+            Feed it;
+        else (other players)
+            :Visit other players;
+            :Fight
+            Send small files
+            Have conversations
+            Greetings
+            Coexist in the same room
+            Give items;
+    end if
+stop
+@enduml

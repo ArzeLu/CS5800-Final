@@ -1,0 +1,179 @@
+@startuml
+
+'note static public getters for the settings page so all guis and shitters can get the settings'
+
+'Master class list'
+
+class DesktopizenRunner{
+    -AccountManager accountManager
+    -MainContentOperator contentOperator
+    -UserInputController inputController
+    -Settings settings
+    #GUIManager guiManager
+    ~run()
+}
+
+class AccountManager <<Singleton>>{
+
+}
+class Account
+class Login
+class Logout
+class UserInputController{
+    -MiniGameManager gameManager
+    #GUIManager guiManager
+    ~mouseClickResponder()
+    ~keyMapResponder()
+}
+
+class MainContentOperator
+class CharacterEnvironmentManager
+class CharacterManager
+class CharacterInterface
+class Character implements CharacterInterface
+class CharacterCustomizer implements CharacterInterface
+class CharacterSize extends CharacterCustomizer
+class CharacterModel extends CharacterCustomizer
+class CharacterAura extends CharacterCustomizer
+class CharacterNameTag extends CharacterCustomizer
+class Animations
+class Models
+class CharacterCustomizations
+class EnvironmentCustomizations
+
+class Settings <<Singleton>>
+class Statistics
+class Inventory
+class Items
+class ItemGenerator
+
+class LLMManager
+class ConversationListener <<Singleton>>
+class CharacterConversation
+class FriendConversation
+
+class GUIManager <<Singleton>>
+class GUIBuilder
+class DairyGUI
+class TodoListGUI
+class CustomizationsGUI
+class SettingsGUI
+class FriendListGUI
+class MiniGameGUI
+
+class MiniGameManager
+class MiniGame
+class FeedGame
+class DesktopFileGame
+class FeedGame
+
+class FileGenerator
+class FileSender
+class File
+
+class DiaryManager
+
+interface TextTiles
+class DiaryTiles implements TextTiles
+class StatTile implements TextTiles
+class FriendTile implements TextTiles
+class SpeechTile implements TextTiles
+interface TileGenerator
+class DiaryTileGenerator implements TileGenerator
+class StatTileGenerator implements TileGenerator
+class FriendTileGenerator implements TileGenerator
+class SpeechTileGenerator implements TileGenerator
+
+class TodoListItems
+class TodoListManager
+
+class FriendsManager <<Singleton>>
+class FriendsList
+class Friend
+
+abstract class Cloud
+class CloudDB <<Singleton>>
+class LocalDB <<Singleton>>
+class Auth <<Singleton>>
+
+'Class relationships'
+' - Auth mediates for Login and Logout'
+' - GUIManager, GUIBuilder, and all other GUI factories make up chain of command'
+' - clouddb and conversationmanager observer'
+' - character flyweight'
+' - text tiles - factory method'
+' - clouddb and localdb momento'
+' - character decorator'
+
+DesktopizenRunner *-- AccountManager
+DesktopizenRunner *-- MainContentOperator
+DesktopizenRunner *-- UserInputController
+DesktopizenRunner *-- Settings
+DesktopizenRunner - GUIManager : uses >
+
+UserInputController - GUIManager : uses >
+UserInputController - MiniGameManager : uses >
+
+MiniGame - Settings : uses >
+MiniGameManager *-- MiniGame
+MiniGameManager *-- FeedGame
+MiniGameManager *-- DesktopFileGame
+MiniGameManager *-- FeedGame
+
+GUIManager - GUIBuilder : creates >
+GUIBuilder o-- GUIBuilder
+GUIBuilder <|-- DairyGUI
+GUIBuilder <|-- TodoListGUI
+GUIBuilder <|-- CustomizationsGUI
+GUIBuilder <|-- SettingsGUI
+GUIBuilder <|-- FriendListGUI
+GUIBuilder <|-- MiniGameGUI
+
+DiaryTileGenerator - DiaryTiles : creates >
+StatTileGenerator - StatTile : creates >
+FriendTileGenerator - FriendTile : creates >
+SpeechTileGenerator - SpeechTile : creates >
+
+Cloud <|-- CloudDB
+Cloud <|-- LocalDB
+Cloud <|-- Auth
+
+ConversationListener - CloudDB : observes >
+ConversationListener <|-- FriendConversation
+ConversationListener <|-- CharacterConversation
+CharacterConversation - LLMManager : uses >
+
+FriendsManager - CloudDB : observes >
+FriendsManager <|-- FriendsList
+FriendsList *-- FriendTileGenerator
+FriendsList o-- Friend
+
+Auth - Login : helps mediate >
+Auth - Logout : helps mediate >
+
+AccountManager - Account : creates >
+
+AccountManager *-- Login
+AccountManager *-- Logout
+
+MainContentOperator - CharacterEnvironmentManager : uses >
+CharacterEnvironmentManager *-- CharacterManager
+CharacterEnvironmentManager *-- EnvironmentCustomizations
+CharacterManager o-- Character : creates >
+Character *-- Animations
+Character *-- Model
+Character *-- CharacterCustomizations
+Character *-- FileGenerator
+Character *-- FileSender
+Character *-- TodoListManager
+Character *-- DiaryManager
+Character *-- Inventory
+Character *-- Statistics
+
+Statistics o-- StatTiles
+Inventory o-- Items
+Inventory - ItemGenerator : uses >
+FileSender - File : creates >
+ItemGenerator - Items : creates >
+
+@enduml

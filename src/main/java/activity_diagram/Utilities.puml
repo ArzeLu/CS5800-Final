@@ -1,0 +1,17 @@
+@startuml
+start
+    split
+        :Customizations;
+        :Right click on mascot;
+        :Change size
+        Change character model
+        Change accessories
+        Look at items
+        Look at statistics;
+    split again
+        :Idle;
+        :Watch the character walk around;
+        :Watch your friends' characters walk around;
+    end split
+stop
+@enduml

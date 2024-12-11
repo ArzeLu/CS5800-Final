@@ -1,0 +1,78 @@
+@startuml
+
+AccountManager <<Singleton>>
+Account
+Login
+Logout
+UserInputController
+
+MainContentOperator
+CharacterEnvironmentManager
+CharacterManager
+CharacterInterface
+Character implements CharacterInterface
+CharacterCustomizer implements CharacterInterface
+CharacterSize extends CharacterCustomizer
+CharacterModel extends CharacterCustomizer
+CharacterAura extends CharacterCustomizer
+CharacterNameTag extends CharacterCustomizer
+Animations
+Models
+CharacterCustomizations
+EnvironmentCustomizations
+
+Settings <<Singleton>>
+Statistics
+Inventory
+Items
+ItemGenerator
+
+LLMManager
+ConversationListener <<Singleton>>
+CharacterConversation
+FriendConversation
+
+GUIManager <<Singleton>>
+GUIBuilder
+DairyGUI
+TodoListGUI
+CustomizationsGUI
+SettingsGUI
+FriendListGUI
+MiniGameGUI
+
+MiniGameManager
+MiniGame
+FeedGame
+DesktopFileGame
+FeedGame
+
+FileGenerator
+FileSender
+File
+
+DiaryManager
+
+TextTiles
+DiaryTiles implements TextTiles
+StatTile implements TextTiles
+FriendTile implements TextTiles
+SpeechTile implements TextTiles
+TileGenerator
+DiaryTileGenerator implements TileGenerator
+StatTileGenerator implements TileGenerator
+FriendTileGenerator implements TileGenerator
+SpeechTileGenerator implements TileGenerator
+
+TodoListItems
+TodoListManager
+
+FriendsManager <<Singleton>>
+FriendsList
+Friend
+
+Cloud
+CloudDB <<Singleton>>
+LocalDB <<Singleton>>
+Auth <<Singleton>>
+@enduml
