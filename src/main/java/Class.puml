@@ -13,97 +13,303 @@ class DesktopizenRunner{
     ~run()
 }
 
-class AccountManager <<Singleton>>{
-
+class AccountManager <<Singleton>> extends Auth{
+    -Login login
+    -Logout logout
+    -Account account
+    #Cloud[] cloudServes
+    ~void forgetUser(super())
+    ~void forgetPassword(super())
+    ~void enableCloudServices()
 }
-class Account
-class Login
-class Logout
+
+class Account{
+    #String username
+    #String password
+    ~void setUsername()
+    ~void encrypt()
+    ~String decrypt()
+    ~String getPassword()
+    ~String getUsername()
+}
+
+class Login{
+    #Auth auth
+    ~String login(Auth auth)
+}
+
+class Logout{
+    #Auth auth
+    ~String logout(Auth auth)
+}
+
 class UserInputController{
     -MiniGameManager gameManager
     #GUIManager guiManager
-    ~mouseClickResponder()
-    ~keyMapResponder()
+    ~char mouseClickResponder()
+    ~char keyMapResponder()
 }
 
-class MainContentOperator
-class CharacterEnvironmentManager
-class CharacterManager
-class CharacterInterface
-class Character implements CharacterInterface
-class CharacterCustomizer implements CharacterInterface
-class CharacterSize extends CharacterCustomizer
-class CharacterModel extends CharacterCustomizer
-class CharacterAura extends CharacterCustomizer
-class CharacterNameTag extends CharacterCustomizer
-class Animations
-class Models
-class CharacterCustomizations
-class EnvironmentCustomizations
+class MainContentOperator{
+    -EnvironmentManager envManager
+    -CharacterManager charManager
+    ~void renderCharacter()
+    ~void renderEnvironment()
+}
 
-class Settings <<Singleton>>
-class Statistics
-class Inventory
-class Items
-class ItemGenerator
+class EnvironmentManager{
+    -EnvironmentCustomizations customizations
+    -Environment environment
+    ~void render()
+    ~void loadCustomizations()
+    ~void setCustomizations(String option)
+}
 
-class LLMManager
-class ConversationListener <<Singleton>>
-class CharacterConversation
-class FriendConversation
+class Environment{
+    #String[] traits
+    ~void setTrait(String trait)
+}
 
-class GUIManager <<Singleton>>
-class GUIBuilder
-class DairyGUI
-class TodoListGUI
-class CustomizationsGUI
-class SettingsGUI
-class FriendListGUI
-class MiniGameGUI
+class CharacterManager{
+    -CharacterCustomizer customizer
+    -Character character
+    ~void createCharacter(Model model)
+    ~void render()
+    ~void loadCustomizations()
+    ~void setCustomizations(String option)
+}
 
-class MiniGameManager
-class MiniGame
-class FeedGame
-class DesktopFileGame
-class FeedGame
+class CharacterInterface{
+    ~void setSize()
+    ~void setModel()
+    ~void setGlow()
+    ~void setNameTag()
+}
 
-class FileGenerator
-class FileSender
-class File
+class Character implements CharacterInterface{
+    #final Model model
+    #double size
+    #Glow glow
+    #String nameTag
+    ~void setSize()
+    ~void setGlow()
+    ~void setNameTag()
+}
 
-class DiaryManager
+class CharacterCustomizer implements CharacterInterface{
+    ~void changeSize()
+    ~void changeGlow()
+    ~void changeNameTag()
+}
 
-interface TextTiles
-class DiaryTiles implements TextTiles
-class StatTile implements TextTiles
-class FriendTile implements TextTiles
-class SpeechTile implements TextTiles
-interface TileGenerator
-class DiaryTileGenerator implements TileGenerator
-class StatTileGenerator implements TileGenerator
-class FriendTileGenerator implements TileGenerator
-class SpeechTileGenerator implements TileGenerator
+class CharacterPremiumCustomizer extends CharacterCustomizer{
+    ~void applyPremiumModelEffects()
+}
 
-class TodoListItems
-class TodoListManager
+class CharacterMultiplayerCustomizer extends CharacterCustomizer{
+    ~void applyMultiplayerGlowEffects()
+}
 
-class FriendsManager <<Singleton>>
-class FriendsList
-class Friend
+class CharacterAdvancedCustomizer extends CharacterCustomizer{
+    ~void applyAdvancedNameTagEffects()
+}
 
-abstract class Cloud
-class CloudDB <<Singleton>>
-class LocalDB <<Singleton>>
-class Auth <<Singleton>>
+class CharacterAdditionalSizes extends CharacterCustomizer{
+    ~void applyAdditionalSizes()
+}
+
+class Animation{
+    #Media media
+    ~void play()
+}
+
+class Model{
+    #GraphicModel model
+}
+
+class EnvironmentCustomizations{
+    #int[2] size
+    #Theme theme
+    ~void setSize()
+    ~void setTheme()
+}
+
+class Settings <<Singleton>>{
+    #GUI settingsGUI
+    ~void setSize()
+
+}
+
+class Statistics{
+    #Time uptime
+    #double experience
+    #int level
+    #int totalFeed
+}
+
+class Inventory{
+    #Item[] items
+    ~void addItem()
+    ~Item getItem(String name)
+}
+
+class Item{
+    #String name
+    #int amount
+}
+
+class ItemGenerator{
+    ~Item makeItem(String name, int amount)
+}
+
+class LLMManager{
+    #LLM llm
+    ~void feedData(String data)
+    ~String generateText()
+}
+
+class ConversationListener <<Singleton>>{
+    ~void update()
+}
+
+class CharacterConversation{
+    -LLMManager llm
+    ~String receiveResponse()
+    ~String generateText()
+}
+
+class FriendConversation{
+    -ConversationListener listener
+    ~void update()
+}
+
+class GUIManager <<Singleton>>{
+    -GUIBuilder builder
+    ~void build()
+}
+
+class GUIBuilder{
+    -GUIBuilder nextBuilder
+    ~void setNext()
+    ~void build()
+}
+
+class DairyGUI extends GUIBuilder{
+    ~(Override) void build()
+}
+
+class TodoListGUI extends GUIBuilder{
+    ~(Override) void build()
+}
+
+class CustomizationsGUI extends GUIBuilder{
+    ~(Override) void build()
+}
+
+class SettingsGUI extends GUIBuilder{
+    ~(Override) void build()
+}
+
+class FriendListGUI extends GUIBuilder{
+    ~(Override) void build()
+}
+
+class MiniGameGUI extends GUIBuilder{
+    ~(Override) void build()
+}
+
+class MiniGameManager{
+    -FeedGame feedGame
+    -DesktopFileGame fileGame
+    -TypeGame typeGame
+    #Setting setting
+}
+
+class FeedGame{
+    ~void run()
+}
+
+class DesktopFileGame{
+    ~void run()
+}
+
+class TypeGame{
+    ~void run()
+}
+
+class FileGenerator{
+    ~File generateFile(String title, String content)
+}
+
+class FileSender{
+    ~void sendFile(File file)
+}
+
+class File{
+    -String title
+    -String content
+}
+
+class DiaryManager{
+    -Diary[] diaries
+    ~void addDiary(Time time, String title, String content)
+    ~String getDiary(Time time)
+}
+
+interface TextTiles{
+    ~void setStyle()
+    ~void setText()
+}
+
+class DiaryTiles implements TextTiles{}
+class StatTile implements TextTiles{}
+class FriendTile implements TextTiles{}
+class SpeechTile implements TextTiles{}
+interface TileGenerator{}
+class DiaryTileGenerator implements TileGenerator{}
+class StatTileGenerator implements TileGenerator{}
+class FriendTileGenerator implements TileGenerator{}
+class SpeechTileGenerator implements TileGenerator{}
+
+class TodoListItems{}
+class TodoListManager{}
+
+class FriendsManager <<Singleton>>{}
+class FriendsList{}
+class Friend{}
+
+abstract class Cloud{
+    ~void attach(Listener listener)
+    ~void detach(Listener listener)
+    ~void notify()
+}
+
+class CloudDB <<Singleton>>{
+    -Firestore db
+    -Snapshot snapshot
+    ~Snapshot getSnapshot()
+}
+
+class LocalDB <<Singleton>>{
+    -MongoDB db
+    ~void loadData()
+}
+
+class Auth <<Singleton>>{
+    -FirebaseAuth auth
+    -String userID
+    ~String login()
+    ~String logout()
+}
 
 'Class relationships'
-' - Auth mediates for Login and Logout'
-' - GUIManager, GUIBuilder, and all other GUI factories make up chain of command'
-' - clouddb and conversationmanager observer'
-' - character flyweight'
+' ok - Auth mediates for Login and Logout'
+' ok - GUIManager, GUIBuilder, and all other GUI factories make up chain of command'
+' ok - clouddb and conversationmanager observer'
+' ok - character flyweight'
 ' - text tiles - factory method'
 ' - clouddb and localdb momento'
-' - character decorator'
+' ok - character decorator'
 
 DesktopizenRunner *-- AccountManager
 DesktopizenRunner *-- MainContentOperator
@@ -114,20 +320,14 @@ DesktopizenRunner - GUIManager : uses >
 UserInputController - GUIManager : uses >
 UserInputController - MiniGameManager : uses >
 
-MiniGame - Settings : uses >
+MiniGameManager - Settings : uses >
 MiniGameManager *-- MiniGame
 MiniGameManager *-- FeedGame
 MiniGameManager *-- DesktopFileGame
-MiniGameManager *-- FeedGame
+MiniGameManager *-- TypeGame
 
 GUIManager - GUIBuilder : creates >
 GUIBuilder o-- GUIBuilder
-GUIBuilder <|-- DairyGUI
-GUIBuilder <|-- TodoListGUI
-GUIBuilder <|-- CustomizationsGUI
-GUIBuilder <|-- SettingsGUI
-GUIBuilder <|-- FriendListGUI
-GUIBuilder <|-- MiniGameGUI
 
 DiaryTileGenerator - DiaryTiles : creates >
 StatTileGenerator - StatTile : creates >
@@ -138,7 +338,7 @@ Cloud <|-- CloudDB
 Cloud <|-- LocalDB
 Cloud <|-- Auth
 
-ConversationListener - CloudDB : observes >
+ConversationListener - Cloud : observes >
 ConversationListener <|-- FriendConversation
 ConversationListener <|-- CharacterConversation
 CharacterConversation - LLMManager : uses >
@@ -156,13 +356,13 @@ AccountManager - Account : creates >
 AccountManager *-- Login
 AccountManager *-- Logout
 
-MainContentOperator - CharacterEnvironmentManager : uses >
-CharacterEnvironmentManager *-- CharacterManager
-CharacterEnvironmentManager *-- EnvironmentCustomizations
+MainContentOperator *-- EnvironmentManager
+MainContentOperator *-- CharacterManager
+EnvironmentManager *-- EnvironmentCustomizations
+CharacterManager *--CharacterCustomizer : uses >
 CharacterManager o-- Character : creates >
-Character *-- Animations
+Character *-- Animation
 Character *-- Model
-Character *-- CharacterCustomizations
 Character *-- FileGenerator
 Character *-- FileSender
 Character *-- TodoListManager
@@ -171,9 +371,9 @@ Character *-- Inventory
 Character *-- Statistics
 
 Statistics o-- StatTiles
-Inventory o-- Items
+Inventory o-- Item
 Inventory - ItemGenerator : uses >
 FileSender - File : creates >
-ItemGenerator - Items : creates >
+ItemGenerator - Item : creates >
 
 @enduml
