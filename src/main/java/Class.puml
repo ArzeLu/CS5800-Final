@@ -256,23 +256,66 @@ class DiaryManager{
     ~String getDiary(Time time)
 }
 
-interface TextTiles{
+interface TextTile{
     ~void setStyle()
     ~void setText()
 }
 
-class DiaryTiles implements TextTiles{}
-class StatTile implements TextTiles{}
-class FriendTile implements TextTiles{}
-class SpeechTile implements TextTiles{}
-interface TileGenerator{}
-class DiaryTileGenerator implements TileGenerator{}
-class StatTileGenerator implements TileGenerator{}
-class FriendTileGenerator implements TileGenerator{}
-class SpeechTileGenerator implements TileGenerator{}
+class DiaryTiles implements TextTile{
+    #String entry
+    ~void setStyle()
+    ~void setText()
+}
 
-class TodoListItems{}
-class TodoListManager{}
+class StatTile implements TextTile{
+    #String text
+    ~void setStyle()
+    ~void setText()
+}
+
+class FriendTile implements TextTile{
+    #String name
+    ~void setStyle()
+    ~void setText()
+}
+
+class SpeechTile implements TextTile{
+    #String text
+    ~void setStyle()
+    ~void setText()
+}
+
+interface TileGenerator{
+    ~TextTile generateTile()
+}
+
+class DiaryTileGenerator implements TileGenerator{
+    ~TextTile generateTile()
+}
+
+class StatTileGenerator implements TileGenerator{
+    ~TextTile generateTile()
+}
+
+class FriendTileGenerator implements TileGenerator{
+    ~TextTile generateTile()
+}
+
+class SpeechTileGenerator implements TileGenerator{
+    ~TextTile generateTile()
+}
+
+class TodoListItem{
+    #String name
+    #Time deadline
+    #Time started
+    #boolean finished
+}
+
+class TodoListManager{
+    ~void displayItems()
+    ~
+}
 
 class FriendsManager <<Singleton>>{}
 class FriendsList{}
