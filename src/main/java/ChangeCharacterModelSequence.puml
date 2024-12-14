@@ -1,0 +1,15 @@
+@startuml
+
+actor User as User
+EnvironmentManager -> EnvironmentManager: renderEnvironment()
+EnvironmentManager -> CharacterManager: renderCharacter()
+CharacterManager -> Character: creates
+User -> Character: right click on it
+CharacterManager -> GUIManager: build()
+GUIManager -> CustomizationGUI: build()
+CustomizationGUI -> CustomizationGUI: renderCustomizationMenu()
+User -> CustomizationGUI: chooses model
+CustomizationGUI -> CharacterManager: Model
+CharacterManager -> CharacterManager: renderCharacter()
+
+@enduml

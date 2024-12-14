@@ -1,0 +1,32 @@
+@startuml
+
+actor User as User
+participant FriendsManager as FriendsManager
+participant FriendList as FriendList
+participant FriendsTileGenerator as FriendsTileGenerator
+participant FriendsListGUI as FriendsListGUI
+participant EnvironmentManager as EnvironmentManager
+participant CharacterManager as CharacterManager
+participant "(Friend) Inventory" as FriendInventory
+participant GUIManager as GUI
+participant InventoryGUI as InventoryGUI
+
+User -> FriendsManager: render()
+FriendsManager -> FriendList: getFriendList()
+FriendList -> FriendsManager: friends
+FriendsManager -> FriendsTileGenerator: generateTile(friends)
+FriendsTileGenerator -> FriendsManager: ArrayList<TextTile> friendsTile
+FriendsManager -> FriendsListGUI: render(ArrayList<TextTile> friendsTile
+User -> FriendsListGUI: clicks on a tile
+FriendsListGUI -> FriendsManager: Friend
+FriendsManager -> EnvironmentManager: renderFriendEnvironment(Friend)
+EnvironmentManager -> EnvironmentManager: renderEnvironment()
+EnvironmentManager -> CharacterManager: renderCharacter()
+CharacterManager -> FriendInventory: openInventoryMenu()
+FriendInventory -> GUI: build(ArrayList<Item> items)
+GUI -> InventoryGUI: renderInventory()
+User -> InventoryGUI: clicks on a tile
+InventoryGUI -> Inventory: Item
+Inventory -> Inventory: place(Item)
+
+@enduml

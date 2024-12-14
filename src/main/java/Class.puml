@@ -1,7 +1,5 @@
 @startuml
 
-'note static public getters for the settings page so all guis and shitters can get the settings'
-
 'Master class list'
 
 class DesktopizenRunner{
@@ -73,6 +71,7 @@ class Environment{
 class CharacterManager{
     -CharacterCustomizer customizer
     -Character character
+    ~void openMenu()
     ~void createCharacter(Model model)
     ~void render()
     ~void loadCustomizations()
@@ -156,6 +155,9 @@ class Inventory{
 class Item{
     #String name
     #int amount
+
+    ~void getName()
+    ~void getQuantity()
 }
 
 class ItemGenerator{
@@ -194,11 +196,19 @@ class GUIBuilder{
     ~void build()
 }
 
+class CharacterManagerGUI{
+    ~(Override) void build()
+}
+
 class DairyGUI extends GUIBuilder{
     ~(Override) void build()
 }
 
 class TodoListGUI extends GUIBuilder{
+    ~(Override) void build()
+}
+
+class InventoryGUI extends GUIBuilder{
     ~(Override) void build()
 }
 
@@ -297,7 +307,7 @@ class StatTileGenerator implements TileGenerator{
     ~TextTile generateTile()
 }
 
-class FriendTileGenerator implements TileGenerator{
+class FriendsTileGenerator implements TileGenerator{
     ~TextTile generateTile()
 }
 
@@ -314,12 +324,25 @@ class TodoListItem{
 
 class TodoListManager{
     ~void displayItems()
-    ~
 }
 
-class FriendsManager <<Singleton>>{}
-class FriendsList{}
-class Friend{}
+class FriendsManager <<Singleton>>{
+    #FriendsList list
+    #FriendsListGUI gui
+    #FriendTileGenerator generator
+    #EnvironmentManager envManager
+    #CloudDB cloudDB
+}
+
+class FriendsList{
+    #Arraylist<Friend> friends
+    ~ArrayList<Friend> getFriends()
+}
+
+class Friend{
+    #String name
+    #String ID
+}
 
 abstract class Cloud{
     ~void attach(Listener listener)
@@ -341,18 +364,12 @@ class LocalDB <<Singleton>>{
 class Auth <<Singleton>>{
     -FirebaseAuth auth
     -String userID
+    ~Snapshot getSnapshot()
     ~String login()
     ~String logout()
 }
 
 'Class relationships'
-' ok - Auth mediates for Login and Logout'
-' ok - GUIManager, GUIBuilder, and all other GUI factories make up chain of command'
-' ok - clouddb and conversationmanager observer'
-' ok - character flyweight'
-' - text tiles - factory method'
-' - clouddb and localdb momento'
-' ok - character decorator'
 
 DesktopizenRunner *-- AccountManager
 DesktopizenRunner *-- MainContentOperator
@@ -374,7 +391,7 @@ GUIBuilder o-- GUIBuilder
 
 DiaryTileGenerator - DiaryTiles : creates >
 StatTileGenerator - StatTile : creates >
-FriendTileGenerator - FriendTile : creates >
+FriendsTileGenerator - FriendTile : creates >
 SpeechTileGenerator - SpeechTile : creates >
 
 Cloud <|-- CloudDB
@@ -386,10 +403,13 @@ ConversationListener <|-- FriendConversation
 ConversationListener <|-- CharacterConversation
 CharacterConversation - LLMManager : uses >
 
-FriendsManager - CloudDB : observes >
 FriendsManager <|-- FriendsList
-FriendsList *-- FriendTileGenerator
+FriendsManager *-- FriendListGUI
+FriendsManager - EnvironmentManager: uses >
+FriendsList *-- FriendsTileGenerator
 FriendsList o-- Friend
+FriendsManager - CloudDB : observes >
+
 
 Auth - Login : helps mediate >
 Auth - Logout : helps mediate >
@@ -404,17 +424,19 @@ MainContentOperator *-- CharacterManager
 EnvironmentManager *-- EnvironmentCustomizations
 CharacterManager *--CharacterCustomizer : uses >
 CharacterManager o-- Character : creates >
-Character *-- Animation
-Character *-- Model
-Character *-- FileGenerator
-Character *-- FileSender
-Character *-- TodoListManager
-Character *-- DiaryManager
-Character *-- Inventory
-Character *-- Statistics
+CharacterManager *-- GUIManager
+CharacterManager *-- Animation
+CharacterManager *-- Model
+CharacterManager *-- FileGenerator
+CharacterManager *-- FileSender
+CharacterManager *-- TodoListManager
+CharacterManager *-- DiaryManager
+CharacterManager *-- Inventory
+CharacterManager *-- Statistics
 
 Statistics o-- StatTiles
 Inventory o-- Item
+Inventory *-- GUIManager
 Inventory - ItemGenerator : uses >
 FileSender - File : creates >
 ItemGenerator - Item : creates >
